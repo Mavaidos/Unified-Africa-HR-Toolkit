@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADvTECH — Employee Data Generator | South Africa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1A2F45;
+  --navy-light: #243B55;
+  --gold: #C8A84B;
+  --gold-light: #E2C97E;
+  --gold-pale: #F5EDD8;
+  --white: #FAFAF8;
+  --off-white: #F2EFE9;
+  --text-dark: #1C1C1E;
+  --text-mid: #4A4A52;
+  --text-light: #8A8A96;
+  --success: #2D7D46;
+  --error: #C0392B;
+  --warning: #E67E22;
+  --border: #E0D9CE;
+  --shadow: 0 4px 24px rgba(13,27,42,0.12);
+  --shadow-lg: 0 8px 48px rgba(13,27,42,0.18);
+  --radius: 12px;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--off-white);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* HEADER */
+.app-header {
+  background: var(--navy);
+  position: sticky; top: 0; z-index: 100;
+  padding: 0 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 68px;
+  border-bottom: 1px solid rgba(200,168,75,0.2);
+}
+.logo { display: flex; align-items: center; gap: 1rem; }
+.logo-mark {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700; font-size: 1.1rem; color: var(--navy);
+}
+.logo-text { color: var(--white); }
+.logo-text strong {
+  display: block; font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; font-weight: 600; letter-spacing: 0.03em;
+}
+.logo-text span { font-size: 0.72rem; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; }
+.header-badge {
+  background: rgba(200,168,75,0.15); border: 1px solid rgba(200,168,75,0.3);
+  color: var(--gold-light); border-radius: 20px;
+  padding: 0.3rem 0.9rem; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* LAYOUT */
+.app-body { display: grid; grid-template-columns: 340px 1fr; min-height: calc(100vh - 68px); }
+
+/* SIDEBAR */
+.sidebar {
+  background: var(--navy-mid);
+  padding: 2rem 1.5rem;
+  border-right: 1px solid rgba(200,168,75,0.15);
+  display: flex; flex-direction: column; gap: 1.5rem;
+  position: sticky; top: 68px; height: calc(100vh - 68px); overflow-y: auto;
+}
+.sidebar-section { display: flex; flex-direction: column; gap: 0.75rem; }
+.sidebar-label {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+  padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.config-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.config-label { font-size: 0.8rem; color: rgba(255,255,255,0.65); font-weight: 500; }
+.config-input {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  color: var(--white); border-radius: 8px; padding: 0.6rem 0.85rem;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+  transition: var(--transition); width: 100%;
+}
+.config-input:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,0.1); }
+select.config-input option { background: var(--navy-mid); color: var(--white); }
+
+.checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; max-height: 200px; overflow-y: auto; }
+.cb-item { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; }
+.cb-item input[type=checkbox] { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; }
+.cb-item label { font-size: 0.8rem; color: rgba(255,255,255,0.7); cursor: pointer; }
+
+.btn-generate {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy); border: none; border-radius: 10px;
+  padding: 0.85rem 1.5rem; font-family: 'DM Sans', sans-serif;
+  font-weight: 600; font-size: 0.9rem; cursor: pointer;
+  width: 100%; transition: var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.btn-generate:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200,168,75,0.3); }
+.btn-generate:active { transform: translateY(0); }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.stat-card {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px; padding: 0.7rem;
+  text-align: center;
+}
+.stat-val { font-size: 1.4rem; font-weight: 600; color: var(--gold-light); font-family: 'Cormorant Garamond', serif; }
+.stat-lbl { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.05em; margin-top: 0.1rem; }
+
+/* MAIN AREA */
+.main-area { display: flex; flex-direction: column; overflow: hidden; }
+
+/* TOOLBAR */
+.toolbar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem;
+  flex-wrap: wrap;
+}
+.toolbar-left { display: flex; align-items: center; gap: 0.75rem; flex: 1; }
+.search-box {
+  position: relative; flex: 1; max-width: 320px;
+}
+.search-box input {
+  width: 100%; padding: 0.55rem 0.85rem 0.55rem 2.4rem;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+  background: var(--off-white); color: var(--text-dark);
+  transition: var(--transition);
+}
+.search-box input:focus { outline: none; border-color: var(--gold); background: white; }
+.search-box::before {
+  content: '⌕'; position: absolute; left: 0.7rem; top: 50%;
+  transform: translateY(-50%); color: var(--text-light); font-size: 1.1rem;
+  pointer-events: none;
+}
+.filter-select {
+  padding: 0.55rem 0.85rem; border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem; background: var(--off-white);
+  color: var(--text-dark); cursor: pointer;
+}
+.toolbar-right { display: flex; align-items: center; gap: 0.75rem; }
+.btn-export {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 1.1rem; border-radius: 8px; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+}
+.btn-csv { background: var(--navy); color: var(--white); }
+.btn-csv:hover { background: var(--navy-light); }
+.btn-json { background: var(--off-white); color: var(--text-dark); border: 1px solid var(--border); }
+.btn-json:hover { background: var(--gold-pale); }
+.btn-excel { background: #1D6F42; color: white; }
+.btn-excel:hover { background: #155932; }
+
+.record-count {
+  font-size: 0.8rem; color: var(--text-light);
+  background: var(--off-white); padding: 0.4rem 0.85rem;
+  border-radius: 20px; border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* TABLE */
+.table-container { flex: 1; overflow: auto; position: relative; }
+.data-table {
+  width: 100%; border-collapse: collapse; font-size: 0.82rem;
+  min-width: 1200px;
+}
+.data-table thead {
+  background: var(--navy); position: sticky; top: 0; z-index: 10;
+}
+.data-table th {
+  padding: 0.75rem 1rem; text-align: left; font-weight: 500;
+  font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgba(255,255,255,0.7); white-space: nowrap; cursor: pointer;
+  user-select: none; border-right: 1px solid rgba(255,255,255,0.08);
+  transition: var(--transition);
+}
+.data-table th:hover { color: var(--gold-light); }
+.data-table th.sorted { color: var(--gold); }
+.sort-icon { font-size: 0.65rem; margin-left: 0.3rem; opacity: 0.5; }
+.data-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: var(--transition); cursor: pointer;
+}
+.data-table tbody tr:hover { background: var(--gold-pale); }
+.data-table tbody tr.selected { background: #EAE0CC; }
+.data-table td {
+  padding: 0.7rem 1rem; color: var(--text-dark);
+  border-right: 1px solid rgba(224,217,206,0.5);
+  white-space: nowrap; max-width: 180px; overflow: hidden; text-overflow: ellipsis;
+}
+.data-table td:first-child { font-weight: 600; color: var(--navy); font-family: 'DM Mono', monospace; font-size: 0.78rem; }
+.badge {
+  display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px;
+  font-size: 0.72rem; font-weight: 600;
+}
+.badge-male { background: rgba(13,27,42,0.1); color: var(--navy); }
+.badge-female { background: rgba(200,168,75,0.15); color: #8B6914; }
+.badge-perm { background: rgba(45,125,70,0.12); color: #1a5c31; }
+.badge-citizen { background: rgba(13,27,42,0.08); color: var(--navy); }
+.badge-disabled { background: rgba(192,57,43,0.1); color: var(--error); }
+
+/* EMPTY STATE */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 5rem 2rem;
+  color: var(--text-light); text-align: center;
+}
+.empty-icon { font-size: 4rem; margin-bottom: 1.5rem; opacity: 0.3; }
+.empty-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--text-mid); margin-bottom: 0.5rem; }
+.empty-sub { font-size: 0.9rem; color: var(--text-light); max-width: 360px; line-height: 1.6; }
+
+/* DETAIL PANEL */
+.detail-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(13,27,42,0.6); backdrop-filter: blur(4px);
+  display: none;
+}
+.detail-overlay.open { display: block; }
+.detail-panel {
+  position: fixed; right: 0; top: 0; bottom: 0;
+  width: 500px; background: var(--white);
+  box-shadow: var(--shadow-lg); z-index: 201;
+  transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.detail-panel.open { transform: translateX(0); }
+.detail-header {
+  background: var(--navy); padding: 1.5rem 1.8rem;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.detail-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--white); font-weight: 600; }
+.detail-id { font-size: 0.78rem; color: rgba(255,255,255,0.5); font-family: 'DM Mono', monospace; margin-top: 0.2rem; }
+.detail-close {
+  background: rgba(255,255,255,0.1); border: none; color: var(--white);
+  width: 32px; height: 32px; border-radius: 50%;
+  cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.detail-close:hover { background: rgba(255,255,255,0.2); }
+.detail-body { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+.detail-section { }
+.detail-section-title {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-light);
+  margin-bottom: 0.75rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.detail-field { }
+.detail-field-label { font-size: 0.72rem; color: var(--text-light); margin-bottom: 0.2rem; }
+.detail-field-value {
+  font-size: 0.85rem; color: var(--text-dark); font-weight: 500;
+  background: var(--off-white); padding: 0.45rem 0.7rem;
+  border-radius: 6px; border: 1px solid var(--border);
+  font-family: 'DM Mono', monospace; font-size: 0.8rem;
+  word-break: break-all;
+}
+.detail-field.full { grid-column: 1 / -1; }
+.sensitive { filter: blur(4px); transition: filter 0.2s; cursor: pointer; }
+.sensitive:hover { filter: none; }
+.sensitive-note { font-size: 0.7rem; color: var(--text-light); font-style: italic; margin-top: 0.3rem; }
+
+/* GENERATION ANIMATION */
+.generating-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(13,27,42,0.85); backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+  flex-direction: column; gap: 1.5rem;
+}
+.generating-overlay.active { display: flex; }
+.gen-spinner {
+  width: 60px; height: 60px;
+  border: 3px solid rgba(200,168,75,0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.gen-text { color: var(--white); font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; }
+.gen-sub { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+.gen-progress { width: 240px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+.gen-progress-bar { height: 100%; background: var(--gold); width: 0%; transition: width 0.1s; }
+
+/* NOTIFICATION */
+.notification {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 400;
+  background: var(--navy); color: var(--white);
+  padding: 0.85rem 1.4rem; border-radius: 10px;
+  box-shadow: var(--shadow-lg); border-left: 3px solid var(--gold);
+  font-size: 0.85rem; transform: translateY(100px); opacity: 0;
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.notification.show { transform: translateY(0); opacity: 1; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(13,27,42,0.2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">
+    <div class="logo-mark">A</div>
+    <div class="logo-text">
+      <strong>ADvTECH Group</strong>
+      <span>Employee Data Generator · South Africa</span>
+    </div>
+  </div>
+  <div class="header-badge">SuccessFactors EC Ready</div>
+</header>
+
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Volume</div>
+      <div class="config-group">
+        <div class="config-label">Number of records</div>
+        <input type="number" class="config-input" id="numRecords" value="25" min="1" max="1000">
+      </div>
+      <div class="config-group">
+        <div class="config-label">Starting employee number</div>
+        <input type="text" class="config-input" id="startEmpNum" value="EMP-0001">
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Organisation Filter</div>
+      <div class="config-group">
+        <div class="config-label">Division / Brand</div>
+        <select class="config-input" id="filterDivision">
+          <option value="all">All Divisions</option>
+          <option value="schools">ADvTECH Schools</option>
+          <option value="higher">Higher Education</option>
+          <option value="resourcing">ADvTECH Resourcing</option>
+        </select>
+      </div>
+      <div class="config-group">
+        <div class="config-label">Province</div>
+        <select class="config-input" id="filterProvince">
+          <option value="all">All Provinces</option>
+          <option value="GP">Gauteng</option>
+          <option value="WC">Western Cape</option>
+          <option value="KZN">KwaZulu-Natal</option>
+          <option value="EC">Eastern Cape</option>
+          <option value="LP">Limpopo</option>
+          <option value="MP">Mpumalanga</option>
+          <option value="NW">North West</option>
+          <option value="FS">Free State</option>
+          <option value="NC">Northern Cape</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Demographics</div>
+      <div class="config-group">
+        <div class="config-label">Gender split (%F)</div>
+        <input type="range" class="config-input" id="genderSplit" value="50" min="0" max="100" style="padding:0.3rem 0">
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);text-align:center"><span id="genderLabel">50% Female / 50% Male</span></div>
+      </div>
+      <div class="config-group">
+        <div class="config-label">% Permanent residents (non-citizen)</div>
+        <input type="range" class="config-input" id="residencySplit" value="10" min="0" max="50" style="padding:0.3rem 0">
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);text-align:center"><span id="residencyLabel">10% Permanent Resident</span></div>
+      </div>
+      <div class="config-group">
+        <div class="config-label">% With disability declaration</div>
+        <input type="range" class="config-input" id="disabilitySplit" value="5" min="0" max="30" style="padding:0.3rem 0">
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);text-align:center"><span id="disabilityLabel">5% Disability Declared</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Field Groups to Include</div>
+      <div class="checkbox-group">
+        <div class="cb-item"><input type="checkbox" id="f-personal" checked><label for="f-personal">Personal Info</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-address" checked><label for="f-address">Address (ZAF)</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-phone" checked><label for="f-phone">Phone Numbers</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-job" checked><label for="f-job">Job Information</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-employment" checked><label for="f-employment">Employment Dates</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-compensation" checked><label for="f-compensation">Compensation</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-payment" checked><label for="f-payment">Banking / Payment</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-identity" checked><label for="f-identity">SA ID / Tax / UIF</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-emergency" checked><label for="f-emergency">Emergency Contact</label></div>
+        <div class="cb-item"><input type="checkbox" id="f-workpermit"><label for="f-workpermit">Work Permits (non-citizens)</label></div>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="btnGenerate">
+      <span>⚡</span> Generate Data
+    </button>
+
+    <div class="stats-grid" id="statsGrid" style="display:none">
+      <div class="stat-card"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Records</div></div>
+      <div class="stat-card"><div class="stat-val" id="statFemale">0</div><div class="stat-lbl">Female</div></div>
+      <div class="stat-card"><div class="stat-val" id="statCitizen">0</div><div class="stat-lbl">Citizens</div></div>
+      <div class="stat-card"><div class="stat-val" id="statDisabled">0</div><div class="stat-lbl">Disabled</div></div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-area">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search by name, ID, department…">
+        </div>
+        <select class="filter-select" id="filterGender">
+          <option value="">All Genders</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Non-binary">Non-binary</option>
+        </select>
+        <select class="filter-select" id="filterDiv">
+          <option value="">All Divisions</option>
+        </select>
+      </div>
+      <div class="toolbar-right">
+        <span class="record-count" id="recordCount">0 records</span>
+        <button class="btn-export btn-json" id="btnJSON">↓ JSON</button>
+        <button class="btn-export btn-csv" id="btnCSV">↓ CSV</button>
+        <button class="btn-export btn-excel" id="btnExcel">↓ SF Import</button>
+      </div>
+    </div>
+
+    <div class="table-container" id="tableContainer">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">◈</div>
+        <div class="empty-title">No records generated yet</div>
+        <div class="empty-sub">Configure your parameters in the sidebar and click Generate Data to produce realistic South African employee records.</div>
+      </div>
+      <table class="data-table" id="dataTable" style="display:none">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-overlay" id="detailOverlay"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-header">
+    <div>
+      <div class="detail-name" id="dpName"></div>
+      <div class="detail-id" id="dpEmpId"></div>
+    </div>
+    <button class="detail-close" id="detailClose">✕</button>
+  </div>
+  <div class="detail-body" id="detailBody"></div>
+</div>
+
+<!-- GENERATING OVERLAY -->
+<div class="generating-overlay" id="genOverlay">
+  <div class="gen-spinner"></div>
+  <div class="gen-text">Generating Records…</div>
+  <div class="gen-sub" id="genStatus">Preparing data…</div>
+  <div class="gen-progress"><div class="gen-progress-bar" id="genBar"></div></div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notification" id="notification"></div>
+
+<script>
+// ============================================================
+//  DATA POOLS
+// ============================================================
+const DATA = {
+  firstNames: {
+    female: ['Anika','Bongani','Busisiwe','Chadley','Dikeledi','Duduzile','Estelle','Fatima','Funani','Gracious','Hailey','Inhle','Jessica','Keamogetswe','Kelebogile','Lerato','Lindiwe','Luyanda','Mandisa','Marisa','Mpho','Nadia','Naledi','Nandi','Nompumelelo','Nonhlanhla','Noxolo','Ntombi','Phumzile','Portia','Refilwe','Rethabile','Sarie','Sibongile','Simangele','Sindisiwe','Siobhan','Thandeka','Thandi','Thembeka','Tumelo','Unathi','Vuyi','Wendy','Zanele','Zintle','Zodwa','Zoleka','Ntomboxolo','Ayanda'],
+    male: ['Abongile','Andile','Bongani','Buyani','Charl','Dalisu','Deon','Dumisani','Emmanuel','Ethan','Fanele','Frans','Gareth','Goodman','Hlanganani','Innocent','Jabulani','Johan','Kagiso','Khaya','Lebo','Lethiwe','Litha','Lungelo','Lusanda','Mandla','Mduduzi','Mlungisi','Mpendulo','Mthokozisi','Nhlanhla','Nhlanhlayethu','Ntando','Phumlani','Relebohile','Richman','Sandile','Sibusiso','Sibuyile','Siphamandla','Sipho','Siyabonga','Siyanda','Teboho','Thabo','Thamsanqa','Tshepiso','Vusi','Wandile','Zakhele'],
+    nonbinary: ['Alex','River','Sage','Avery','Quinn','Jordan','Morgan','Casey','Peyton','Devon']
+  },
+  lastNames: ['Baloyi','Botha','Cele','Dlamini','Du Plessis','Du Toit','Dube','Erasmus','Fourie','Hadebe','Joubert','Khoza','Khumalo','Le Roux','Luthuli','Mabunda','Mafunda','Mahlangu','Makhanya','Maphanga','Masondo','Mazibuko','Mbatha','Mkhize','Mncwango','Modise','Mokoena','Molefe','Moloi','Mosia','Motaung','Motsepe','Mthembu','Mthethwa','Ndaba','Ndlovu','Ngcobo','Ngema','Ngubane','Ngwenya','Nkosi','Nkwanyana','Ntanzi','Ntuli','Nzama','Nzimande','Phiri','Pieterse','Pillay','Pretorius','Prince','Radebe','Shabalala','Sibiya','Simelane','Sithole','Smit','Steyn','Thabethe','Thusi','van der Merwe','van der Walt','van Zyl','Vilakazi','Xulu','Zwane','Maphumulo','Hadebe','Gumede','Majola','Buthelezi'],
+  
+  provinces: {
+    GP: { name: 'Gauteng', cities: ['Johannesburg','Pretoria','Sandton','Midrand','Randburg','Soweto','Centurion','Roodepoort','Germiston','Boksburg'], suburbs: ['Rosebank','Melrose','Morningside','Illovo','Bryanston','Fourways','Sunninghill','Edenvale','Bedfordview','Benoni'], postalRanges: ['0001','2000','2001','1620','1619','1618'] },
+    WC: { name: 'Western Cape', cities: ['Cape Town','Stellenbosch','Paarl','George','Worcester','Knysna','Mossel Bay','Franschhoek','Hermanus','Somerset West'], suburbs: ['Bellville','Goodwood','Parow','Claremont','Rondebosch','Newlands','Kenilworth','Wynberg','Khayelitsha','Mitchell\'s Plain'], postalRanges: ['8000','7500','7600','7700','7800','6530'] },
+    KZN: { name: 'KwaZulu-Natal', cities: ['Durban','Pietermaritzburg','Newcastle','Richards Bay','Ladysmith','Pinetown','Amanzimtoti','Ballito','Umhlanga','Tongaat'], suburbs: ['Berea','Musgrave','Morningside','Glenwood','Westville','Hillcrest','Kloof','Sherwood','Malvern','Springfield'], postalRanges: ['4001','3200','3900','4230','3300'] },
+    EC: { name: 'Eastern Cape', cities: ['Port Elizabeth','East London','Mthatha','Grahamstown','King William\'s Town','Queenstown','Uitenhage','Bhisho','Jeffrey\'s Bay','Port Alfred'], suburbs: ['Newton Park','Linton Grange','Mill Park','Summerstrand','Humewood','Algoa Park','Kabega Park','Lorraine','Walmer'], postalRanges: ['5200','5201','6000','5300','5100'] },
+    LP: { name: 'Limpopo', cities: ['Polokwane','Tzaneen','Thohoyandou','Musina','Mokopane','Bela-Bela','Lebowakgomo','Burgersfort'], suburbs: ['Bendor','Ivy Park','Fauna Park','Welgelegen'], postalRanges: ['0699','0700','0800','0900'] },
+    MP: { name: 'Mpumalanga', cities: ['Nelspruit','Witbank','Middelburg','Secunda','Standerton','Piet Retief','Hazyview','White River'], suburbs: ['West Acres','Sonheuwel','Stonehenge','Riverside Park'], postalRanges: ['1200','1210','1300','1035'] },
+    NW: { name: 'North West', cities: ['Rustenburg','Mahikeng','Potchefstroom','Klerksdorp','Brits','Hartbeespoort','Lichtenburg'], suburbs: ['Waterfall East','Canaan','Proteapark','Safari Tuine'], postalRanges: ['2850','2745','2531','0240'] },
+    FS: { name: 'Free State', cities: ['Bloemfontein','Welkom','Bethlehem','Sasolburg','Parys','Phuthaditjhaba','Ladybrand'], suburbs: ['Westdene','Universitas','Heuwelsig','Dan Pienaar','Pellissier'], postalRanges: ['9300','9459','9870','9700'] },
+    NC: { name: 'Northern Cape', cities: ['Kimberley','Upington','Springbok','De Aar','Kuruman','Colesberg'], suburbs: ['Galeshewe','Roodepan','Royldene','Phutanang'], postalRanges: ['8300','8801','8800','8200'] }
+  },
+
+  streetNames: ['Main','Church','Market','Park','Oak','Voortrekker','Jan Smuts','Commissioner','Eloff','Long','Adderley','Buitenkant','Loop','Bree','Kerk','Paul Kruger','Nelson Mandela','Walter Sisulu','Chris Hani','Oliver Tambo'],
+  streetTypes: ['Street','Avenue','Road','Drive','Crescent','Boulevard','Lane','Close','Way','Place'],
+  complexNames: ['The Willows','Riverside','Highveld','Sunridge','Greenfields','Oakwood','The Palms','Bloubosrand','Silverstream','Midstream','Clearwater','Centurion Gate','Monte Vista','The Ridge'],
+
+  titles: ['Mr','Mrs','Ms','Dr','Prof','Adv'],
+  genders: ['Male','Female','Non-binary'],
+  languages: ['isiZulu','isiXhosa','Afrikaans','English','Sepedi','Setswana','Sesotho','Xitsonga','siSwati','Tshivenda','isiNdebele'],
+  maritalStatuses: ['Single','Married','Divorced','Widowed','Life Partner','Unknown'],
+  
+  nationalities: ['South African','Zimbabwean','Mozambican','Zambian','Botswanan','Malawian','Swazi','Lesotho','Namibian','Nigerian','Ghanaian','Kenyan','British','German','American','Indian','Pakistani','Chinese','Portuguese','French'],
+  
+  disabilityTypes: ['Visual Impairment','Hearing Impairment','Physical Disability','Intellectual Disability','Psychiatric Disability','Multiple Disabilities'],
+  disabilityDegrees: ['Mild','Moderate','Severe'],
+
+  // ADvTECH structure
+  divisions: {
+    schools: {
+      name: 'ADvTECH Schools',
+      brands: ['Crawford Schools','Trinityhouse','Varsity College Prep','Abbotts College','Trinity House High','Junior Colleges'],
+      departments: ['Academic','Administration','Finance','Human Resources','Marketing','Facilities','IT','Library & Resources','Student Affairs','Pastoral Care'],
+      jobTitles: ['Teacher','Senior Teacher','Head of Department','Deputy Principal','Principal','School Administrator','Receptionist','Bursar','IT Technician','Librarian','Groundskeeper','HR Officer','Marketing Coordinator','Finance Clerk','Student Counsellor','Academic Support Tutor','Science Lab Technician','Grade Head','Subject Head']
+    },
+    higher: {
+      name: 'Higher Education',
+      brands: ['Varsity College','Rosebank College','Design School SA','Vega School','IIE','MSA'],
+      departments: ['Faculty of Business','Faculty of Law','Faculty of Design','Faculty of IT','Student Services','Finance','Human Resources','Registry','Marketing','Admissions','Academic Development','Learning Technologies','Research'],
+      jobTitles: ['Lecturer','Senior Lecturer','Associate Professor','Professor','Programme Manager','Student Advisor','Admissions Officer','Registration Officer','Faculty Administrator','Finance Manager','HR Business Partner','IT Support Analyst','Marketing Manager','Graphic Designer','Academic Dean','Deputy Dean','Campus Director','Learning Facilitator','Tutor','Research Coordinator']
+    },
+    resourcing: {
+      name: 'ADvTECH Resourcing',
+      brands: ['Network Recruitment','Communicate Recruitment','Synergy HR','RecruitAGraduate'],
+      departments: ['Operations','Finance','Business Development','Candidate Management','Compliance','IT','Human Resources'],
+      jobTitles: ['Recruitment Consultant','Senior Recruitment Consultant','Business Development Manager','Account Manager','Compliance Officer','Payroll Administrator','Talent Acquisition Partner','Sourcing Specialist','Branch Manager','Regional Manager','Operations Coordinator','Financial Accountant']
+    }
+  },
+
+  payGrades: ['PG01','PG02','PG03','PG04','PG05','PG06','PG07','PG08','PG09','PG10'],
+  payGroups: ['Monthly-ZAF','Bi-weekly-ZAF','Weekly-ZAF'],
+  payTypes: ['Salary','Hourly','Contract'],
+  benefits: ['Medical Aid','Pension Fund','Group Life Cover','Disability Cover','Study Benefit','Funeral Cover'],
+  
+  banks: [
+    { name: 'ABSA', branchCode: '632005' },
+    { name: 'Capitec Bank', branchCode: '470010' },
+    { name: 'First National Bank', branchCode: '250655' },
+    { name: 'Nedbank', branchCode: '198765' },
+    { name: 'Standard Bank', branchCode: '051001' },
+    { name: 'African Bank', branchCode: '430000' },
+    { name: 'Discovery Bank', branchCode: '679000' },
+    { name: 'Investec Bank', branchCode: '580105' },
+    { name: 'Bidvest Bank', branchCode: '462005' },
+    { name: 'Grindrod Bank', branchCode: '223626' }
+  ],
+  accountTypes: ['Current','Savings','Transmission','Credit Card'],
+  
+  relationships: ['Spouse','Parent','Sibling','Child','Friend','Partner','Other'],
+  
+  workPermitTypes: ['Critical Skills Visa','General Work Visa','Corporate Visa','Intra-company Transfer Visa','Spousal/Life Partner Visa','Asylum Seeker Permit','Refugee Status Document'],
+  issuingAuthorities: ['Department of Home Affairs - South Africa','DIRCO South Africa']
+};
+
+// ============================================================
+//  UTILITY FUNCTIONS
+// ============================================================
+const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const randBool = (prob = 0.5) => Math.random() < prob;
+
+function randomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+function formatDate(d) {
+  if (!d) return '';
+  return d.toISOString().split('T')[0];
+}
+
+function formatCurrency(n) {
+  return 'ZAR ' + Number(n).toLocaleString('en-ZA', {minimumFractionDigits: 2});
+}
+
+function luhnCheckDigit(number) {
+  let sum = 0;
+  let alternate = false;
+  for (let i = number.length - 1; i >= 0; i--) {
+    let n = parseInt(number[i]);
+    if (alternate) { n *= 2; if (n > 9) n -= 9; }
+    sum += n;
+    alternate = !alternate;
+  }
+  return (10 - (sum % 10)) % 10;
+}
+
+function generateSAID(dob, gender, citizen = true) {
+  // YYMMDD
+  const yy = String(dob.getFullYear()).slice(2);
+  const mm = String(dob.getMonth() + 1).padStart(2, '0');
+  const dd = String(dob.getDate()).padStart(2, '0');
+  // Gender sequence: 0000-4999 female, 5000-9999 male
+  const gSeq = gender === 'Female' ? randInt(0, 4999) : randInt(5000, 9999);
+  const gStr = String(gSeq).padStart(4, '0');
+  // Citizenship: 0 = SA citizen, 1 = permanent resident
+  const cit = citizen ? '0' : '1';
+  // Race (obsolete but still 8)
+  const race = '8';
+  // Build partial number
+  const partial = `${yy}${mm}${dd}${gStr}${cit}${race}`;
+  const check = luhnCheckDigit(partial);
+  return `${partial}${check}`;
+}
+
+function generateTaxRef() {
+  // SA tax ref: 10 digits, starts with 0,1,2,3,7,8,9
+  const starts = ['0','1','2','3','7','8','9'];
+  let ref = rand(starts);
+  for (let i = 0; i < 9; i++) ref += randInt(0, 9);
+  return ref;
+}
+
+function generateUIFRef() {
+  return 'U' + String(randInt(10000000, 99999999));
+}
+
+function generateAccountNumber(bankName) {
+  const lengths = { 'ABSA': 9, 'Capitec Bank': 10, 'First National Bank': 11, 'Nedbank': 9, 'Standard Bank': 9 };
+  const len = lengths[bankName] || 10;
+  let acc = String(randInt(1, 9));
+  for (let i = 1; i < len; i++) acc += randInt(0, 9);
+  return acc;
+}
+
+function generatePhone() {
+  const cellPrefixes = ['060','061','062','063','064','065','066','067','068','069','071','072','073','074','075','076','078','079','081','082','083','084','085','086','087','088'];
+  const prefix = rand(cellPrefixes);
+  let num = prefix;
+  for (let i = 0; i < 7; i++) num += randInt(0, 9);
+  return num;
+}
+
+function generateEmail(first, last) {
+  const domains = ['gmail.com','yahoo.com','outlook.com','icloud.com','webmail.co.za','mweb.co.za'];
+  const sep = rand(['.','_','']);
+  return `${first.toLowerCase()}${sep}${last.toLowerCase().replace(/\s/g,'')}@${rand(domains)}`;
+}
+
+function generateEmpNumber(startStr, idx) {
+  const match = startStr.match(/(\D*)(\d+)/);
+  if (!match) return `${startStr}${String(idx).padStart(4,'0')}`;
+  const prefix = match[1];
+  const num = parseInt(match[2]) + idx - 1;
+  const padLen = match[2].length;
+  return `${prefix}${String(num).padStart(padLen,'0')}`;
+}
+
+function getProvinceKey(filter) {
+  const keys = Object.keys(DATA.provinces);
+  if (filter === 'all') return rand(keys);
+  return filter;
+}
+
+// ============================================================
+//  RECORD GENERATOR
+// ============================================================
+function generateRecord(idx, config) {
+  const {genderSplit, residencySplit, disabilitySplit, filterDivision, filterProvince} = config;
+
+  // Demographics
+  const isFemale = Math.random() < genderSplit / 100;
+  const isNonBinary = !isFemale && Math.random() < 0.03;
+  const gender = isNonBinary ? 'Non-binary' : (isFemale ? 'Female' : 'Male');
+  const isCitizen = Math.random() >= residencySplit / 100;
+  const hasDisability = Math.random() < disabilitySplit / 100;
+
+  // Names
+  const gPool = gender === 'Female' ? DATA.firstNames.female : gender === 'Male' ? DATA.firstNames.male : DATA.firstNames.nonbinary;
+  const firstName = rand(gPool);
+  const lastName = rand(DATA.lastNames);
+  const middleName = randBool(0.4) ? rand(gPool) : '';
+  const title = gender === 'Female' ? rand(['Mrs','Ms','Dr','Prof']) : rand(['Mr','Dr','Prof']);
+  const preferredName = randBool(0.2) ? rand(gPool) : firstName;
+  const initials = firstName[0] + (middleName ? middleName[0] : '') + '.';
+  const formalName = `${title} ${firstName} ${lastName}`;
+
+  // DoB: 18–65 years old
+  const dob = randomDate(new Date('1960-01-01'), new Date('2006-12-31'));
+  const saId = (config.includeIdentity && isCitizen) ? generateSAID(dob, gender, true) : '';
+  const passportNum = (!isCitizen || randBool(0.1)) ? `A${String(randInt(1000000, 9999999))}` : '';
+
+  // Nationality
+  const nationality = isCitizen ? 'South African' : rand(DATA.nationalities.filter(n => n !== 'South African'));
+  const language = rand(DATA.languages);
+  const maritalStatus = rand(DATA.maritalStatuses);
+  const maritalSince = maritalStatus !== 'Single' ? formatDate(randomDate(new Date('1990-01-01'), new Date('2022-12-31'))) : '';
+
+  // Address
+  const provKey = getProvinceKey(filterProvince);
+  const prov = DATA.provinces[provKey];
+  const city = rand(prov.cities);
+  const suburb = rand(prov.suburbs);
+  const streetNum = randInt(1, 250);
+  const streetName = `${rand(DATA.streetNames)} ${rand(DATA.streetTypes)}`;
+  const postalCode = rand(prov.postalRanges);
+  const hasComplex = randBool(0.5);
+  const complexName = hasComplex ? rand(DATA.complexNames) : '';
+  const unitNum = hasComplex ? String(randInt(1, 120)) : '';
+  const addressCategory = rand(['Residential','Postal','Street']);
+
+  // Phone
+  const mobile = generatePhone();
+  const workPhone = randBool(0.6) ? generatePhone() : '';
+  const email = generateEmail(firstName, lastName);
+
+  // Emergency contact
+  const emergFirst = rand(gender === 'Male' ? DATA.firstNames.female : DATA.firstNames.male);
+  const emergLast = rand([lastName, rand(DATA.lastNames)]);
+  const emergPhone = generatePhone();
+  const emergRel = rand(DATA.relationships);
+
+  // Division / Brand
+  const divKeys = filterDivision === 'all' ? Object.keys(DATA.divisions) : [filterDivision];
+  const divKey = rand(divKeys);
+  const div = DATA.divisions[divKey];
+  const brand = rand(div.brands);
+  const department = rand(div.departments);
+  const jobTitle = rand(div.jobTitles);
+  const payGrade = rand(DATA.payGrades);
+  const costCentre = `CC-${String(randInt(1000,9999))}`;
+  const positionId = `POS-${String(randInt(10000,99999))}`;
+  const standardHours = rand([37.5, 40, 20, 32]);
+  const fullTime = standardHours >= 37.5;
+  const workDays = 5;
+
+  // Employment dates
+  const startDate = randomDate(new Date('2010-01-01'), new Date('2024-12-31'));
+  const firstDateWorked = startDate;
+  const originalStart = randBool(0.3) ? randomDate(new Date('2005-01-01'), startDate) : startDate;
+  const seniorityDate = originalStart;
+  const benefitsDate = new Date(startDate.getTime() + 90 * 24 * 60 * 60 * 1000);
+
+  // Compensation
+  const baseSalary = randInt(8000, 120000) * (fullTime ? 1 : 0.5);
+  const roundedSalary = Math.round(baseSalary / 100) * 100;
+  const pensionablePercent = rand([0.8, 0.85, 0.9, 1.0]);
+  const pensionableSalary = Math.round(roundedSalary * pensionablePercent / 100) * 100;
+  const payGroup = rand(DATA.payGroups);
+  const payType = rand(DATA.payTypes);
+  const benefitsEligible = true;
+  const benefitsList = [...DATA.benefits].sort(() => Math.random() - 0.5).slice(0, randInt(2, 4));
+
+  // Banking
+  const bank = rand(DATA.banks);
+  const accNum = generateAccountNumber(bank.name);
+  const accType = rand(DATA.accountTypes);
+  const accOwner = `${firstName} ${lastName}`;
+
+  // Identity
+  const taxRef = config.includeIdentity ? generateTaxRef() : '';
+  const uifRef = config.includeIdentity ? generateUIFRef() : '';
+
+  // Work permit
+  let workPermit = null;
+  if (!isCitizen && config.includeWorkPermit) {
+    const issueDate = randomDate(new Date('2018-01-01'), startDate);
+    const expiryDate = randomDate(new Date(), new Date('2028-12-31'));
+    workPermit = {
+      permitType: rand(DATA.workPermitTypes),
+      permitNumber: `WP${String(randInt(100000,999999))}`,
+      issueDate: formatDate(issueDate),
+      expiryDate: formatDate(expiryDate),
+      issuingAuthority: rand(DATA.issuingAuthorities),
+      placeOfIssue: rand(['Pretoria','Cape Town','Durban','Johannesburg'])
+    };
+  }
+
+  // Disability
+  const disabilityType = hasDisability ? rand(DATA.disabilityTypes) : '';
+  const disabilityDegree = hasDisability ? rand(DATA.disabilityDegrees) : '';
+
+  const empNumber = generateEmpNumber(config.startEmpNum, idx);
+
+  return {
+    // Key identifiers
+    employeeId: empNumber,
+    title,
+    firstName,
+    preferredName: preferredName !== firstName ? preferredName : '',
+    middleName,
+    lastName,
+    initials,
+    formalName,
+    fullName: `${firstName} ${lastName}`,
+
+    // Demographics
+    gender,
+    dateOfBirth: formatDate(dob),
+    age: Math.floor((new Date() - dob) / (365.25 * 24 * 60 * 60 * 1000)),
+    nationality,
+    primaryLanguage: language,
+    maritalStatus,
+    maritalStatusSince: maritalSince,
+    citizenshipStatus: isCitizen ? 'SA Citizen' : 'Permanent Resident',
+
+    // Identity
+    saIdNumber: saId,
+    passportNumber: passportNum,
+    taxReferenceNumber: taxRef,
+    uifReferenceNumber: uifRef,
+
+    // Address
+    addressCategory,
+    unitNumber: unitNum,
+    complexName,
+    streetNumber: String(streetNum),
+    streetName,
+    suburb,
+    city,
+    province: provKey,
+    provinceName: prov.name,
+    postalCode,
+    country: 'ZA',
+
+    // Contact
+    mobileNumber: mobile,
+    workPhoneNumber: workPhone,
+    email,
+
+    // Emergency
+    emergencyContactName: `${emergFirst} ${emergLast}`,
+    emergencyContactRelationship: emergRel,
+    emergencyContactPhone: emergPhone,
+
+    // Organisation
+    division: div.name,
+    brand,
+    department,
+    jobTitle,
+    positionId,
+    payGrade,
+    costCentre,
+    location: city,
+
+    // Employment
+    startDate: formatDate(startDate),
+    firstDateWorked: formatDate(firstDateWorked),
+    originalStartDate: formatDate(originalStart),
+    seniorityDate: formatDate(seniorityDate),
+    benefitsEligibleDate: formatDate(benefitsDate),
+    employmentType: fullTime ? 'Full Time' : 'Part Time',
+    standardHours,
+    workDays,
+
+    // Compensation
+    grossMonthlySalary: roundedSalary,
+    grossMonthlySalaryFormatted: formatCurrency(roundedSalary),
+    pensionableSalary,
+    pensionableSalaryFormatted: formatCurrency(pensionableSalary),
+    payGroup,
+    payType,
+    benefitsEligible: benefitsEligible ? 'Yes' : 'No',
+    benefits: benefitsList.join('; '),
+
+    // Banking
+    bankName: bank.name,
+    bankBranchCode: bank.branchCode,
+    accountOwner: accOwner,
+    accountNumber: accNum,
+    accountType: accType,
+    paymentCurrency: 'ZAR',
+    paymentMethod: 'EFT',
+
+    // Work permit
+    workPermitType: workPermit?.permitType || '',
+    workPermitNumber: workPermit?.permitNumber || '',
+    workPermitIssueDate: workPermit?.issueDate || '',
+    workPermitExpiryDate: workPermit?.expiryDate || '',
+    workPermitIssuingAuthority: workPermit?.issuingAuthority || '',
+
+    // Disability (EEA2/BBBEE)
+    disabilityStatus: hasDisability ? 'Yes' : 'No',
+    disabilityType,
+    disabilityDegree,
+  };
+}
+
+// ============================================================
+//  STATE & TABLE
+// ============================================================
+let allRecords = [];
+let filteredRecords = [];
+let sortCol = '';
+let sortDir = 1;
+
+const VISIBLE_COLUMNS = [
+  { key: 'employeeId', label: 'Employee #' },
+  { key: 'fullName', label: 'Full Name' },
+  { key: 'gender', label: 'Gender' },
+  { key: 'jobTitle', label: 'Job Title' },
+  { key: 'department', label: 'Department' },
+  { key: 'division', label: 'Division' },
+  { key: 'provinceName', label: 'Province' },
+  { key: 'startDate', label: 'Start Date' },
+  { key: 'grossMonthlySalaryFormatted', label: 'Gross Salary' },
+  { key: 'citizenshipStatus', label: 'Citizenship' },
+  { key: 'bankName', label: 'Bank' },
+  { key: 'disabilityStatus', label: 'Disability' }
+];
+
+function renderTable() {
+  const thead = document.getElementById('tableHead');
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+  const table = document.getElementById('dataTable');
+  const countEl = document.getElementById('recordCount');
+
+  if (filteredRecords.length === 0) {
+    empty.style.display = 'flex';
+    table.style.display = 'none';
+    countEl.textContent = '0 records';
+    return;
+  }
+
+  empty.style.display = 'none';
+  table.style.display = 'table';
+  countEl.textContent = `${filteredRecords.length.toLocaleString()} records`;
+
+  // Header
+  thead.innerHTML = '<tr>' + VISIBLE_COLUMNS.map(c => {
+    const isSorted = sortCol === c.key;
+    return `<th class="${isSorted ? 'sorted' : ''}" data-key="${c.key}">${c.label}<span class="sort-icon">${isSorted ? (sortDir === 1 ? '▲' : '▼') : '⇅'}</span></th>`;
+  }).join('') + '</tr>';
+
+  // Body (virtual render - max 500 rows for performance)
+  const rows = filteredRecords.slice(0, 500);
+  tbody.innerHTML = rows.map((r, i) => {
+    return `<tr data-idx="${allRecords.indexOf(r)}">
+      ${VISIBLE_COLUMNS.map(c => {
+        let val = r[c.key] ?? '';
+        let cell = `<td title="${val}">`;
+        if (c.key === 'gender') {
+          const cls = val === 'Female' ? 'badge-female' : val === 'Male' ? 'badge-male' : 'badge-perm';
+          cell += `<span class="badge ${cls}">${val}</span>`;
+        } else if (c.key === 'citizenshipStatus') {
+          const cls = val === 'SA Citizen' ? 'badge-citizen' : 'badge-perm';
+          cell += `<span class="badge ${cls}">${val}</span>`;
+        } else if (c.key === 'disabilityStatus' && val === 'Yes') {
+          cell += `<span class="badge badge-disabled">Yes</span>`;
+        } else {
+          cell += val;
+        }
+        cell += '</td>';
+        return cell;
+      }).join('')}
+    </tr>`;
+  }).join('');
+
+  if (filteredRecords.length > 500) {
+    tbody.innerHTML += `<tr><td colspan="${VISIBLE_COLUMNS.length}" style="text-align:center;padding:1rem;color:var(--text-light);font-style:italic">Showing 500 of ${filteredRecords.length.toLocaleString()} records. Export to see all.</td></tr>`;
+  }
+
+  // Header sort listeners
+  thead.querySelectorAll('th').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (sortCol === key) sortDir *= -1;
+      else { sortCol = key; sortDir = 1; }
+      filteredRecords.sort((a, b) => {
+        const av = a[key] ?? '';
+        const bv = b[key] ?? '';
+        return av < bv ? -sortDir : av > bv ? sortDir : 0;
+      });
+      renderTable();
+    });
+  });
+
+  // Row click -> detail
+  tbody.querySelectorAll('tr[data-idx]').forEach(row => {
+    row.addEventListener('click', () => {
+      const idx = parseInt(row.dataset.idx);
+      openDetail(allRecords[idx]);
+    });
+  });
+}
+
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const gFilter = document.getElementById('filterGender').value;
+  const dFilter = document.getElementById('filterDiv').value;
+
+  filteredRecords = allRecords.filter(r => {
+    if (gFilter && r.gender !== gFilter) return false;
+    if (dFilter && r.division !== dFilter) return false;
+    if (search) {
+      const haystack = [r.fullName, r.employeeId, r.department, r.jobTitle, r.saIdNumber, r.city].join(' ').toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+  renderTable();
+}
+
+// ============================================================
+//  DETAIL PANEL
+// ============================================================
+function openDetail(r) {
+  document.getElementById('dpName').textContent = r.formalName || r.fullName;
+  document.getElementById('dpEmpId').textContent = `${r.employeeId} · ${r.jobTitle}`;
+
+  const body = document.getElementById('detailBody');
+  body.innerHTML = `
+    <div class="detail-section">
+      <div class="detail-section-title">Personal Information</div>
+      <div class="detail-grid">
+        ${df('Title', r.title)}
+        ${df('Full Name', r.fullName)}
+        ${df('Preferred Name', r.preferredName || r.firstName)}
+        ${df('Gender', r.gender)}
+        ${df('Date of Birth', r.dateOfBirth)}
+        ${df('Nationality', r.nationality)}
+        ${df('Primary Language', r.primaryLanguage)}
+        ${df('Marital Status', r.maritalStatus)}
+        ${df('Citizenship', r.citizenshipStatus)}
+        ${df('Disability', r.disabilityStatus + (r.disabilityType ? ` — ${r.disabilityType}` : ''))}
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Identity Numbers</div>
+      <div class="detail-grid">
+        ${df('SA ID Number', r.saIdNumber || '—', true)}
+        ${df('Passport', r.passportNumber || '—', true)}
+        ${df('Tax Reference', r.taxReferenceNumber || '—', true)}
+        ${df('UIF Reference', r.uifReferenceNumber || '—', true)}
+      </div>
+      <div class="sensitive-note">⚠ Click on sensitive fields to reveal. For authorised users only.</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Address — South Africa</div>
+      <div class="detail-grid">
+        ${df('Category', r.addressCategory)}
+        ${df('Complex', r.complexName || '—')}
+        ${df('Unit', r.unitNumber || '—')}
+        ${df('Street', `${r.streetNumber} ${r.streetName}`)}
+        ${df('Suburb', r.suburb)}
+        ${df('City', r.city)}
+        ${df('Province', r.provinceName)}
+        ${df('Postal Code', r.postalCode)}
+        ${df('Country', 'South Africa (ZA)')}
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Contact</div>
+      <div class="detail-grid">
+        ${df('Mobile', r.mobileNumber)}
+        ${df('Work Phone', r.workPhoneNumber || '—')}
+        ${df('Email', r.email, false, true)}
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Job & Organisation</div>
+      <div class="detail-grid">
+        ${df('Division', r.division)}
+        ${df('Brand', r.brand)}
+        ${df('Department', r.department)}
+        ${df('Job Title', r.jobTitle)}
+        ${df('Position ID', r.positionId)}
+        ${df('Pay Grade', r.payGrade)}
+        ${df('Cost Centre', r.costCentre)}
+        ${df('Location', r.location)}
+        ${df('Employment Type', r.employmentType)}
+        ${df('Standard Hours', String(r.standardHours) + ' hrs/week')}
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Employment Dates</div>
+      <div class="detail-grid">
+        ${df('Start Date', r.startDate)}
+        ${df('First Date Worked', r.firstDateWorked)}
+        ${df('Original Start Date', r.originalStartDate)}
+        ${df('Seniority Date', r.seniorityDate)}
+        ${df('Benefits Eligible From', r.benefitsEligibleDate)}
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Compensation</div>
+      <div class="detail-grid">
+        ${df('Gross Monthly', r.grossMonthlySalaryFormatted)}
+        ${df('Pensionable Salary', r.pensionableSalaryFormatted)}
+        ${df('Pay Group', r.payGroup)}
+        ${df('Pay Type', r.payType)}
+        ${df('Benefits', r.benefits, false, true)}
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Banking / Payment</div>
+      <div class="detail-grid">
+        ${df('Bank', r.bankName)}
+        ${df('Branch Code', r.bankBranchCode)}
+        ${df('Account Owner', r.accountOwner)}
+        ${df('Account Number', r.accountNumber, true)}
+        ${df('Account Type', r.accountType)}
+        ${df('Payment Method', r.paymentMethod)}
+        ${df('Currency', r.paymentCurrency)}
+      </div>
+    </div>
+    ${r.workPermitType ? `
+    <div class="detail-section">
+      <div class="detail-section-title">Work Permit</div>
+      <div class="detail-grid">
+        ${df('Permit Type', r.workPermitType)}
+        ${df('Permit Number', r.workPermitNumber, true)}
+        ${df('Issue Date', r.workPermitIssueDate)}
+        ${df('Expiry Date', r.workPermitExpiryDate)}
+        ${df('Issuing Authority', r.workPermitIssuingAuthority, false, true)}
+      </div>
+    </div>` : ''}
+    <div class="detail-section">
+      <div class="detail-section-title">Emergency Contact</div>
+      <div class="detail-grid">
+        ${df('Name', r.emergencyContactName)}
+        ${df('Relationship', r.emergencyContactRelationship)}
+        ${df('Phone', r.emergencyContactPhone)}
+      </div>
+    </div>
+  `;
+
+  // Reveal sensitive on click
+  body.querySelectorAll('.sensitive').forEach(el => {
+    el.addEventListener('click', () => el.classList.remove('sensitive'));
+  });
+
+  document.getElementById('detailOverlay').classList.add('open');
+  document.getElementById('detailPanel').classList.add('open');
+}
+
+function df(label, value, sensitive = false, full = false) {
+  const valClass = sensitive ? 'detail-field-value sensitive' : 'detail-field-value';
+  const cls = full ? 'detail-field full' : 'detail-field';
+  return `<div class="${cls}">
+    <div class="detail-field-label">${label}</div>
+    <div class="${valClass}">${value || '—'}</div>
+  </div>`;
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.getElementById('detailPanel').classList.remove('open');
+}
+
+// ============================================================
+//  EXPORT FUNCTIONS
+// ============================================================
+function escapeCSV(val) {
+  if (val === null || val === undefined) return '';
+  const str = String(val);
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) return `"${str.replace(/"/g, '""')}"`;
+  return str;
+}
+
+function exportCSV() {
+  if (!allRecords.length) { showNotification('No records to export'); return; }
+  const cols = Object.keys(allRecords[0]);
+  const header = cols.map(escapeCSV).join(',');
+  const rows = allRecords.map(r => cols.map(c => escapeCSV(r[c])).join(','));
+  const csv = [header, ...rows].join('\n');
+  download('ADvTECH_Employees.csv', csv, 'text/csv');
+  showNotification(`✓ Exported ${allRecords.length} records as CSV`);
+}
+
+function exportJSON() {
+  if (!allRecords.length) { showNotification('No records to export'); return; }
+  download('ADvTECH_Employees.json', JSON.stringify(allRecords, null, 2), 'application/json');
+  showNotification(`✓ Exported ${allRecords.length} records as JSON`);
+}
+
+function exportSFCSV() {
+  if (!allRecords.length) { showNotification('No records to export'); return; }
+  // SuccessFactors EC-style flat export with SF field IDs
+  const sfCols = [
+    ['userId', 'employeeId'],
+    ['firstName', 'firstName'],
+    ['lastName', 'lastName'],
+    ['mi', 'middleName'],
+    ['prefix', 'title'],
+    ['gender', 'gender'],
+    ['dateOfBirth', 'dateOfBirth'],
+    ['nationality1', 'nationality'],
+    ['nativePreferredLang', 'primaryLanguage'],
+    ['maritalStatus', 'maritalStatus'],
+    ['disability', 'disabilityStatus'],
+    ['disabilityType', 'disabilityType'],
+    ['citizenship', 'citizenshipStatus'],
+    ['saIdNumber', 'saIdNumber'],
+    ['passportNumber', 'passportNumber'],
+    ['taxRef', 'taxReferenceNumber'],
+    ['uifRef', 'uifReferenceNumber'],
+    ['addressCategory', 'addressCategory'],
+    ['unit', 'unitNumber'],
+    ['complex', 'complexName'],
+    ['streetNumber', 'streetNumber'],
+    ['streetName', 'streetName'],
+    ['suburb', 'suburb'],
+    ['city', 'city'],
+    ['province', 'province'],
+    ['zipCode', 'postalCode'],
+    ['country', 'country'],
+    ['cell1', 'mobileNumber'],
+    ['emailAddress', 'email'],
+    ['event', () => 'HIRE'],
+    ['eventReason', () => 'NEWHIRE'],
+    ['startDate', 'startDate'],
+    ['jobTitle', 'jobTitle'],
+    ['department', 'department'],
+    ['division', 'division'],
+    ['company', 'brand'],
+    ['location', 'location'],
+    ['payGrade', 'payGrade'],
+    ['costCenter', 'costCentre'],
+    ['standardHours', 'standardHours'],
+    ['empType', 'employmentType'],
+    ['originalStartDate', 'originalStartDate'],
+    ['seniorityDate', 'seniorityDate'],
+    ['payGroup', 'payGroup'],
+    ['payType', 'payType'],
+    ['salary', 'grossMonthlySalary'],
+    ['bankName', 'bankName'],
+    ['bankBranch', 'bankBranchCode'],
+    ['accountNumber', 'accountNumber'],
+    ['accountType', 'accountType'],
+    ['payMethod', 'paymentMethod'],
+    ['currency', 'paymentCurrency'],
+    ['emergContactName', 'emergencyContactName'],
+    ['emergContactRel', 'emergencyContactRelationship'],
+    ['emergContactPhone', 'emergencyContactPhone'],
+  ];
+  const header = sfCols.map(c => c[0]).join(',');
+  const rows = allRecords.map(r => sfCols.map(c => {
+    const val = typeof c[1] === 'function' ? c[1]() : (r[c[1]] ?? '');
+    return escapeCSV(val);
+  }).join(','));
+  const csv = [header, ...rows].join('\n');
+  download('ADvTECH_SF_Import.csv', csv, 'text/csv');
+  showNotification(`✓ Exported SF Import file (${allRecords.length} rows)`);
+}
+
+function download(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+//  GENERATION
+// ============================================================
+async function generate() {
+  const n = parseInt(document.getElementById('numRecords').value) || 25;
+  const config = {
+    startEmpNum: document.getElementById('startEmpNum').value || 'EMP-0001',
+    genderSplit: parseInt(document.getElementById('genderSplit').value),
+    residencySplit: parseInt(document.getElementById('residencySplit').value),
+    disabilitySplit: parseInt(document.getElementById('disabilitySplit').value),
+    filterDivision: document.getElementById('filterDivision').value,
+    filterProvince: document.getElementById('filterProvince').value,
+    includeIdentity: document.getElementById('f-identity').checked,
+    includeWorkPermit: document.getElementById('f-workpermit').checked,
+  };
+
+  // Show overlay
+  const overlay = document.getElementById('genOverlay');
+  const bar = document.getElementById('genBar');
+  const status = document.getElementById('genStatus');
+  overlay.classList.add('active');
+
+  allRecords = [];
+  const batchSize = Math.min(50, n);
+
+  for (let i = 1; i <= n; i++) {
+    allRecords.push(generateRecord(i, config));
+    if (i % batchSize === 0 || i === n) {
+      const pct = Math.round((i / n) * 100);
+      bar.style.width = pct + '%';
+      status.textContent = `Generated ${i.toLocaleString()} of ${n.toLocaleString()} records…`;
+      // Yield to browser
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+
+  overlay.classList.remove('active');
+
+  // Update stats
+  const stats = {
+    total: allRecords.length,
+    female: allRecords.filter(r => r.gender === 'Female').length,
+    citizen: allRecords.filter(r => r.citizenshipStatus === 'SA Citizen').length,
+    disabled: allRecords.filter(r => r.disabilityStatus === 'Yes').length
+  };
+  document.getElementById('statsGrid').style.display = 'grid';
+  document.getElementById('statTotal').textContent = stats.total.toLocaleString();
+  document.getElementById('statFemale').textContent = stats.female.toLocaleString();
+  document.getElementById('statCitizen').textContent = stats.citizen.toLocaleString();
+  document.getElementById('statDisabled').textContent = stats.disabled.toLocaleString();
+
+  // Populate division filter
+  const divs = [...new Set(allRecords.map(r => r.division))].sort();
+  const divSel = document.getElementById('filterDiv');
+  divSel.innerHTML = '<option value="">All Divisions</option>' + divs.map(d => `<option value="${d}">${d}</option>`).join('');
+
+  filteredRecords = [...allRecords];
+  renderTable();
+  showNotification(`✓ ${n.toLocaleString()} records generated successfully`);
+}
+
+// ============================================================
+//  NOTIFICATION
+// ============================================================
+function showNotification(msg) {
+  const el = document.getElementById('notification');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ============================================================
+//  EVENT LISTENERS
+// ============================================================
+document.getElementById('btnGenerate').addEventListener('click', generate);
+document.getElementById('btnCSV').addEventListener('click', exportCSV);
+document.getElementById('btnJSON').addEventListener('click', exportJSON);
+document.getElementById('btnExcel').addEventListener('click', exportSFCSV);
+document.getElementById('detailClose').addEventListener('click', closeDetail);
+document.getElementById('detailOverlay').addEventListener('click', closeDetail);
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('filterGender').addEventListener('change', applyFilters);
+document.getElementById('filterDiv').addEventListener('change', applyFilters);
+
+// Sliders
+document.getElementById('genderSplit').addEventListener('input', e => {
+  const v = e.target.value;
+  document.getElementById('genderLabel').textContent = `${v}% Female / ${100 - v}% Male`;
+});
+document.getElementById('residencySplit').addEventListener('input', e => {
+  document.getElementById('residencyLabel').textContent = `${e.target.value}% Permanent Resident`;
+});
+document.getElementById('disabilitySplit').addEventListener('input', e => {
+  document.getElementById('disabilityLabel').textContent = `${e.target.value}% Disability Declared`;
+});
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDetail();
+});
+</script>
+</body>
+</html>
