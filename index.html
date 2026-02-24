@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Africa HR Toolkit - ID & Social Generator</title>
+<style>
+body{font-family:"Segoe UI",sans-serif;background:#f4faf6;padding:40px}
+.card{max-width:900px;margin:auto;background:#fff;padding:30px;border-radius:16px;
+box-shadow:0 8px 24px rgba(0,0,0,.08)}
+h1{text-align:center}
+label{font-weight:600;display:block;margin-top:12px}
+select,input,button{
+width:100%;padding:12px;margin-top:8px;border-radius:10px;
+border:1px solid #cfe9da;font-size:15px}
+button{background:#A9E5BB;font-weight:bold;cursor:pointer}
+.result{margin-top:15px;font-weight:600}
+.valid{color:#2FA46D}
+.invalid{color:#D9534F}
+.note{font-size:13px;color:#555;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h1>Unified Africa HR Toolkit</h1>
+
+<label>Country</label>
+<select id="country">
+<option value="za">South Africa</option>
+<option value="ke">Kenya</option>
+<option value="gh">Ghana</option>
+<option value="bw">Botswana</option>
+<option value="ls">Lesotho</option>
+</select>
+
+<label>ID / Number Type</label>
+<select id="type"></select>
+
+<button onclick="generate()">Generate Dummy Number</button>
+<p id="generated" class="result"></p>
+
+<label>Validate Number</label>
+<input id="input" placeholder="Enter number">
+<button onclick="validate()">Validate</button>
+<p id="validation" class="result"></p>
+
+<p class="note">Educational tool only. Format validation only — government databases required for real verification.</p>
+</div>
+
+<script>
+const map={
+za:["SA ID","SARS Tax"],
+ke:["NSSF","NHIF","SHIF","NITA"],
+gh:["SSNIT","TIN","PETRA"],
+bw:["BURS TIN"],
+ls:["Lesotho ID"]
+};
+
+function updateTypes(){
+let c=country.value;
+type.innerHTML="";
+map[c].forEach(t=>{
+let o=document.createElement("option");
+o.value=t;o.textContent=t;
+type.appendChild(o);
+});
+}
+country.onchange=updateTypes;
+updateTypes();
+
+function digits(n){
+return Array.from({length:n},()=>Math.floor(Math.random()*10)).join("");
+}
+function letter(){
+return String.fromCharCode(65+Math.floor(Math.random()*26));
+}
+
+/* Luhn */
+function luhn(num){
+let sum=0,alt=false;
+for(let i=num.length-1;i>=0;i--){
+let d=parseInt(num[i]);
+if(alt){d*=2;if(d>9)d-=9}
+sum+=d;alt=!alt;
+}
+return sum%10===0;
+}
+
+/* SA ID */
+function genSAID(){
+let dob=digits(6);
+let gender=Math.random()<0.5?"0":"5";
+let seq=gender+digits(3);
+let citizen=Math.random()<0.8?"0":"1";
+let partial=dob+seq+citizen+"8";
+for(let i=0;i<10;i++)
+if(luhn(partial+i))return partial+i;
+}
+
+function generate(){
+let c=country.value,t=type.value,o="";
+if(c==="za"&&t==="SA ID")o=genSAID();
+if(c==="za"&&t==="SARS Tax"){let b=digits(9);for(let i=0;i<10;i++)if(luhn(b+i))o=b+i;}
+if(c==="ke"&&t==="NSSF")o=digits(10);
+if(c==="ke"&&t==="NHIF")o=digits(8);
+if(c==="ke"&&t==="SHIF")o="SHIF"+digits(7);
+if(c==="ke"&&t==="NITA")o="NITA"+digits(6);
+if(c==="gh"&&t==="SSNIT")o=letter()+digits(9);
+if(c==="gh"&&t==="TIN")o="GHA-"+digits(9)+"-"+Math.floor(Math.random()*10);
+if(c==="gh"&&t==="PETRA")o="PETRA"+digits(8);
+if(c==="bw")o="BW"+digits(9);
+if(c==="ls")o=digits(12);
+generated.innerText=o;
+}
+
+function validate(){
+let c=country.value,t=type.value,v=input.value.trim();
+let ok=false,msg="";
+
+if(c==="za"&&t==="SA ID"){
+ok=/^\d{13}$/.test(v)&&luhn(v);
+msg="SA ID";
+}
+if(c==="za"&&t==="SARS Tax"){
+ok=/^\d{10}$/.test(v)&&luhn(v);
+msg="SARS Tax";
+}
+if(c==="ke"&&t==="NSSF"){ok=/^\d{10}$/.test(v);msg="NSSF";}
+if(c==="ke"&&t==="NHIF"){ok=/^\d{8}$/.test(v);msg="NHIF";}
+if(c==="ke"&&t==="SHIF"){ok=/^SHIF\d{7}$/.test(v);msg="SHIF";}
+if(c==="ke"&&t==="NITA"){ok=/^NITA\d{6}$/.test(v);msg="NITA";}
+if(c==="gh"&&t==="SSNIT"){ok=/^[A-Z]\d{9}$/.test(v);msg="SSNIT";}
+if(c==="gh"&&t==="TIN"){ok=/^GHA-\d{9}-\d$/.test(v);msg="GRA TIN";}
+if(c==="gh"&&t==="PETRA"){ok=/^PETRA\d{8}$/.test(v);msg="PETRA";}
+if(c==="bw"){ok=/^BW\d{9}$/.test(v);msg="BURS";}
+if(c==="ls"){ok=/^\d{12}$/.test(v);msg="Lesotho ID";}
+
+validation.innerHTML=ok?
+"<span class='valid'>Valid "+msg+" Format ✔</span>":
+"<span class='invalid'>Invalid "+msg+"</span>";
+}
+</script>
+</body>
+</html>
