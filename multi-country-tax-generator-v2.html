@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Multi-Country Tax Generator</title>
+<style>
+body{font-family:Segoe UI,sans-serif;background:#f4faf6;padding:40px}
+.card{max-width:800px;margin:auto;background:white;padding:30px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+label{font-weight:600;display:block;margin-top:10px}
+select,input,button{width:100%;padding:12px;margin-top:8px;border-radius:10px;border:1px solid #cfe9da}
+button{background:#A9E5BB;font-weight:bold;cursor:pointer}
+.result{margin-top:15px;font-weight:600}
+.valid{color:#2FA46D}
+.invalid{color:#D9534F}
+.note{font-size:13px;color:#555}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Multi-Country Tax Number Generator</h2>
+<label>Country</label>
+<select id="country">
+<option value="za">South Africa (SARS)</option>
+<option value="ke">Kenya (KRA)</option>
+<option value="bw">Botswana (BURS)</option>
+<option value="gh">Ghana (GRA)</option>
+</select>
+<button onclick="generateTax()">Generate Dummy Tax Number</button>
+<p id="generated" class="result"></p>
+
+<label>Validate Tax Number</label>
+<input id="inputTax" placeholder="Enter tax number">
+<button onclick="validateTax()">Validate</button>
+<p id="validation" class="result"></p>
+
+<p class="note">Dummy tax numbers for testing only.</p>
+</div>
+
+<script>
+function r(n){return Array.from({length:n},()=>Math.floor(Math.random()*10)).join("")}
+function l(){return String.fromCharCode(65+Math.floor(Math.random()*26))}
+function lu(n){
+  let s=0,a=false;
+  for(let i=n.length-1;i>=0;i--){
+    let d=parseInt(n[i]);
+    if(a){d*=2;if(d>9)d-=9}
+    s+=d;a=!a
+  }
+  return s%10===0
+}
+function sa(){
+  let b=r(9);
+  for(let i=0;i<10;i++) if(lu(b+i)) return b+i
+}
+function ke(){return l()+r(9)+l()}
+function bw(){return "BW"+r(9)}
+function gh(){return "GHA"+r(11)}
+
+function generateTax(){
+  let c=country.value,o="";
+  if(c==="za") o=sa();
+  if(c==="ke") o=ke();
+  if(c==="bw") o=bw();
+  if(c==="gh") o=gh();
+  generated.innerText=o
+}
+
+function validateTax(){
+  let c=country.value,v=inputTax.value.trim();
+  if(c==="za") validation.innerHTML=/^\d{10}$/.test(v)&&lu(v)?"<span class=valid>Valid SARS Tax ✔</span>":"<span class=invalid>Invalid SARS</span>";
+  if(c==="ke") validation.innerHTML=/^[A-Z]\d{9}[A-Z]$/.test(v)?"<span class=valid>Valid KRA PIN ✔</span>":"<span class=invalid>Invalid KRA</span>";
+  if(c==="bw") validation.innerHTML=/^BW\d{9}$/.test(v)?"<span class=valid>Valid BURS TIN ✔</span>":"<span class=invalid>Invalid BURS</span>";
+  if(c==="gh") validation.innerHTML=/^GHA\d{11}$/.test(v)?"<span class=valid>Valid GRA TIN ✔</span>":"<span class=invalid>Invalid GRA</span>"
+}
+</script>
+</body>
+</html>
